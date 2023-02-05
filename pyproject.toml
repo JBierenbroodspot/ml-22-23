@@ -2,3 +2,6 @@
 name = "ml_22_23"
 version = "0.0.1"
 description = "Exercises for the subject Machine learning of the year 2022-2023"
+
+[tool.setuptools.packages.find]
+exclude = ["ml_22_23.tests*", "ml_22_23.notebooks*"]
