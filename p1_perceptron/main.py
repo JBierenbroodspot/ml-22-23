@@ -1,6 +1,10 @@
 """"""
 
 
+class Perceptron:
+    pass
+
+
 def main() -> None:
     pass
 
