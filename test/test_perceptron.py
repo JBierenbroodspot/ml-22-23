@@ -52,6 +52,25 @@ class TestPerceptron(unittest.TestCase):
 
         self.assertIn(self.perceptron.activate([0.0]), (0, 1,), msg)
 
+    def test_activate(self):
+        """Tests if Perceptron's activate function calculates output correctly."""
+
+        msg = "Perceptron.activate() does not return correct value"
+        perceptron_output: int
+
+        arguments = (  # Each tuple exists of: weights, threshold, input, expected output
+            ([1.0, 1.0, 1.0], 3, [1.0, 1.0, 1.0], 1),
+            ([1.0, 1.0], 3, [1.0, 1.0], 0),
+            ([1.0, .5], 0.5, [.0, 1.0], 1),
+            ([1.0, .5], 0.5, [.0, .0], 0),
+        )
+
+        for argument in arguments:
+            self.perceptron = Perceptron(argument[0], argument[1])
+            perceptron_output = self.perceptron.activate(argument[2])
+
+            self.assertEqual(argument[3], perceptron_output, msg)
+
 
 class TestPerceptronLayer(unittest.TestCase):
     def test_has_perceptrons(self):
