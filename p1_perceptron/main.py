@@ -2,10 +2,16 @@
 
 
 class Perceptron:
-    def activate() -> int:
-        output: int = 0
+    bias: float
+    weights: list[float]
 
-        return output
+    def activate(self, inputs: list[float]) -> int:
+        output: int = sum([
+            vector * self.weights[index]
+            for index, vector in enumerate(inputs)
+        ]) + self.bias
+
+        return int(output >= 0)
 
 
 class PerceptronLayer:
