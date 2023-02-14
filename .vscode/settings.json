@@ -1,6 +1,9 @@
 {
     "python.linting.flake8Enabled": true,
     "python.linting.enabled": true,
+    "python.linting.flake8Args": [
+        "--max-line-length=120"
+    ],
     "python.testing.unittestArgs": [
         "-v",
         "-s",
@@ -9,5 +12,9 @@
         "test_*.py"
     ],
     "python.testing.pytestEnabled": false,
-    "python.testing.unittestEnabled": true
+    "python.testing.unittestEnabled": true,
+    "editor.rulers": [
+        120,
+    ],
+    "editor.wordWrap": "off"
 }
