@@ -49,8 +49,20 @@ class TestPerceptron(unittest.TestCase):
         """Test if the Perceptron's activate() output is either 1 or 0."""
 
         msg = "The output of Perceptron.activate() is not either 1 or 0"
+        perceptron_output: int
 
-        self.assertIn(self.perceptron.activate([0.0]), (0, 1,), msg)
+        arguments = (  # Each tuple exists of: weights, threshold, input
+            ([1.0, 1.0, 1.0], 3, [1.0, 1.0, 1.0]),
+            ([1.0, 1.0], 3, [1.0, 1.0]),
+            ([1.0, .5], 0.5, [.0, 1.0]),
+            ([1.0, .5], 0.5, [.0, .0]),
+        )
+
+        for argument in arguments:
+            self.perceptron = Perceptron(argument[0], argument[1])
+            perceptron_output = self.perceptron.activate(argument[2])
+
+            self.assertIn(perceptron_output, (0, 1,), msg)
 
     def test_activate(self):
         """Tests if Perceptron's activate function calculates output correctly."""
