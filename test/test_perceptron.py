@@ -106,7 +106,7 @@ class TestPerceptronLayer(unittest.TestCase):
 
 class TestPerceptronNetwork(unittest.TestCase):
     def setUp(self):
-        self.perceptron_network = PerceptronNetwork()
+        self.perceptron_network = PerceptronNetwork([])
 
     def test_has_layers(self):
         """Test if the network has an attribute for assigning PerceptronLayers.
