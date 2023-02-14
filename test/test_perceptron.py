@@ -85,21 +85,23 @@ class TestPerceptron(unittest.TestCase):
 
 
 class TestPerceptronLayer(unittest.TestCase):
+    def setUp(self):
+        self.perceptron_layer = PerceptronLayer()
+
     def test_has_perceptrons(self):
         """Test if the layer contains a attribute for assigning Perceptrons."""
 
         msg = "PerceptronLayer does not contain the attribute 'perceptrons'"
 
-        self.assertTrue(hasattr(Perceptron, "perceptrons"), msg)
+        self.assertTrue(hasattr(self.perceptron_layer, "perceptrons"), msg)
 
     def test_has___str__(self):
         """Test if the PerceptronLayer has a '__str__()' method."""
 
         msg = "PerceptronLayer does not have a custom '__str__()' method."
-        perceptron_layer = PerceptronLayer()
 
         # Test if standard __str__() is not returned
-        self.assertNotIn("object at", str(perceptron_layer), msg)
+        self.assertNotIn("object at", str(self.perceptron_layer), msg)
 
 
 class TestPerceptronNetwork(unittest.TestCase):
