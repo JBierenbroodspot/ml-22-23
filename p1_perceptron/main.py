@@ -32,7 +32,10 @@ class Perceptron:
 
 
 class PerceptronLayer:
-    pass
+    perceptrons: list[Perceptron]
+
+    def __str__(self) -> str:
+        return f"PerceptronLayer with {len(self.perceptrons)} perceptrons"
 
 
 class PerceptronNetwork:
