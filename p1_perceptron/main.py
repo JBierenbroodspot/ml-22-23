@@ -2,6 +2,17 @@
 
 
 class Perceptron:
+    def activate() -> int:
+        output: int = 0
+
+        return output
+
+
+class PerceptronLayer:
+    pass
+
+
+class PerceptronNetwork:
     pass
 
 
