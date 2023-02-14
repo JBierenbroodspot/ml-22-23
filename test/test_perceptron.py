@@ -4,19 +4,24 @@ from p1_perceptron import Perceptron, PerceptronLayer, PerceptronNetwork
 
 
 class TestPerceptron(unittest.TestCase):
+    perceptron: Perceptron
+
+    def setUp(self):
+        self.perceptron = Perceptron([0.0], 1)
+
     def test_has_bias(self):
         """Test if the Perceptron has the bias attribute."""
 
         msg = "Perceptron does not contain attribute 'bias'."
 
-        self.assertTrue(hasattr(Perceptron, "bias"), msg)
+        self.assertTrue(hasattr(self.perceptron, "bias"), msg)
 
     def test_has_weights(self):
         """Test if the Perceptron has the weight attribute."""
 
         msg = "Perceptron does not contain attribute 'weight'."
 
-        self.assertTrue(hasattr(Perceptron, "weights"), msg)
+        self.assertTrue(hasattr(self.perceptron, "weights"), msg)
 
     def test_bias(self):
         """Test if the bias attribute is equal to -threshold."""
