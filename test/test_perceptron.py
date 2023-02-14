@@ -32,7 +32,7 @@ class TestPerceptron(unittest.TestCase):
         thresholds = {20: -20, -10: 10}
 
         for threshold, expected_bias in thresholds.items():
-            perceptron = Perceptron(threshold)
+            perceptron = Perceptron([], threshold)
             print(str(perceptron))
 
             self.assertEqual(perceptron.bias, expected_bias, msg)
@@ -41,18 +41,16 @@ class TestPerceptron(unittest.TestCase):
         """Test if the Perceptron has a '__str__()' method."""
 
         msg = "Perceptron does not have a custom '__str__()' method."
-        perceptron = Perceptron()
 
         # Test if standard __str__() is not returned
-        self.assertNotIn("object at", str(perceptron), msg)
+        self.assertNotIn("object at", str(self.perceptron), msg)
 
     def test_activate_output(self):
         """Test if the Perceptron's activate() output is either 1 or 0."""
 
         msg = "The output of Perceptron.activate() is not either 1 or 0"
-        perceptron = Perceptron()
 
-        self.assertIn(perceptron.activate(), (0, 1,), msg)
+        self.assertIn(self.perceptron.activate([0.0]), (0, 1,), msg)
 
 
 class TestPerceptronLayer(unittest.TestCase):
