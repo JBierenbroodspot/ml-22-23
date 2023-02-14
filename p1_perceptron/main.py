@@ -39,7 +39,10 @@ class PerceptronLayer:
 
 
 class PerceptronNetwork:
-    pass
+    layers: list[PerceptronLayer]
+
+    def __str__(self) -> str:
+        return f"PerceptronNetwork with {len(self.layers)} layers"
 
 
 def main() -> None:
