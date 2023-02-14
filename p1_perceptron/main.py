@@ -9,6 +9,9 @@ class Perceptron:
         self.bias = -threshold
         self.weights = weights
 
+    def __str__(self) -> str:
+        return f"Perceptron with t={-self.bias}"
+
     def activate(self, inputs: list[float]) -> int:
         """Activation function for the perceptron.
 
