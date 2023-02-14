@@ -86,7 +86,7 @@ class TestPerceptron(unittest.TestCase):
 
 class TestPerceptronLayer(unittest.TestCase):
     def setUp(self):
-        self.perceptron_layer = PerceptronLayer()
+        self.perceptron_layer = PerceptronLayer([])
 
     def test_has_perceptrons(self):
         """Test if the layer contains a attribute for assigning Perceptrons."""

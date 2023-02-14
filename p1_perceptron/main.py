@@ -34,6 +34,9 @@ class Perceptron:
 class PerceptronLayer:
     perceptrons: list[Perceptron]
 
+    def __init__(self, perceptrons: list[Perceptron]):
+        self.perceptrons = perceptrons
+
     def __str__(self) -> str:
         return f"PerceptronLayer with {len(self.perceptrons)} perceptrons"
 
