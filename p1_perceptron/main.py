@@ -40,6 +40,9 @@ class PerceptronLayer:
     def __str__(self) -> str:
         return f"PerceptronLayer with {len(self.perceptrons)} perceptrons"
 
+    def activate(self, input_values: list[float]) -> list[float]:
+        return [perceptron.activate(input_values) for perceptron in self.perceptrons]
+
 
 class PerceptronNetwork:
     layers: list[PerceptronLayer]
@@ -49,6 +52,9 @@ class PerceptronNetwork:
 
     def __str__(self) -> str:
         return f"PerceptronNetwork with {len(self.layers)} layers"
+
+    def predict(input_values: list[float]) -> list[float]:
+        return []
 
 
 def main() -> None:
