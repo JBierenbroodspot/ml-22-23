@@ -103,10 +103,46 @@ class TestPerceptronLayer(unittest.TestCase):
         # Test if standard __str__() is not returned
         self.assertNotIn("object at", str(self.perceptron_layer), msg)
 
+    def test_activate_count(self):
+        """Test if activate() returns the correct amount of outputs."""
+
+        msg = "PerceptronLayer.activate() does not return the correct amount of outputs"
+
+        for i in range(1, 11):
+            perceptrons = list([Perceptron([0], 0) for j in range(1, i)])
+            perceptron_layer = PerceptronLayer(perceptrons)
+
+            self.assertEqual(len(perceptrons), len(perceptron_layer.activate([])), msg)
+
+    def test_activate(self):
+        """Test if activate() returns the correct values."""
+
+        msg = "Perceptron.activate() does not return the correct values"
+
+        perceptrons = [Perceptron([1, 1], 1)]
+        perceptron_layer = PerceptronLayer(perceptrons)
+
+        self.assertEqual(perceptron_layer.activate([0, 0]), [0], msg)
+        self.assertEqual(perceptron_layer.activate([0, 1]), [1], msg)
+        self.assertEqual(perceptron_layer.activate([1, 0]), [1], msg)
+        self.assertEqual(perceptron_layer.activate([1, 1]), [1], msg)
+
+        perceptrons = [Perceptron([1, 1], 1), Perceptron([1, 1], 2)]
+        perceptron_layer = PerceptronLayer(perceptrons)
+
+        self.assertEqual(perceptron_layer.activate([0, 0]), [0, 0], msg)
+        self.assertEqual(perceptron_layer.activate([0, 1]), [1, 0], msg)
+        self.assertEqual(perceptron_layer.activate([1, 0]), [1, 0], msg)
+        self.assertEqual(perceptron_layer.activate([1, 1]), [1, 1], msg)
+
 
 class TestPerceptronNetwork(unittest.TestCase):
     def setUp(self):
-        self.perceptron_network = PerceptronNetwork([])
+        layers = [
+            PerceptronLayer([Perceptron([1, 1], 1), Perceptron([1, 1], 2), Perceptron([-1, -1], 1)]),
+            PerceptronLayer([Perceptron([0.5, 1, .8], -1), Perceptron([.22, 2, .1], 1)]),
+        ]
+        self.perceptron_network = PerceptronNetwork(layers)
 
     def test_has_layers(self):
         """Test if the network has an attribute for assigning PerceptronLayers.
@@ -122,6 +158,16 @@ class TestPerceptronNetwork(unittest.TestCase):
 
         # Test if standard __str__() is not returned
         self.assertNotIn("object at", str(self.perceptron_network), msg)
+
+    def test_predict(self):
+        """Test if network predicts the correct outcome based on an input."""
+
+        msg = "PerceptronNetwork.predict() returns an incorrect output."
+
+        input_values = [1, 0]
+        expected_value = [1, 0]
+
+        self.assertEqual(self.perceptron_network.predict(input_values), expected_value, msg)
 
 
 if __name__ == "__main__":
