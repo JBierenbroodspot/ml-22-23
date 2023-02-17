@@ -67,8 +67,8 @@ class PerceptronNetwork:
         The input_values are fed into the first layer and the result is then fed into the next layer until the last
         layer, of which the output values get returned as the prediction.
 
-        The name of the method can be a bit misleading but it is called this way to mimic the `predict()` methods for
-        models within the sk_learn library.
+        The name of the method can be a bit misleading as there's not much predicting to do in a deterministic model but
+        it is called this way to mimic the `predict()` methods for models within the sk_learn library.
 
         Args:
             input_values: The initial values of which to predict the output of.
