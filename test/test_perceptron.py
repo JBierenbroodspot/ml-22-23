@@ -1,13 +1,13 @@
 import unittest
 
-from p1_perceptron import Perceptron, PerceptronLayer, PerceptronNetwork
+from p1_perceptron import Perceptron, PerceptronLayer, PerceptronNetwork, step_activation
 
 
 class TestPerceptron(unittest.TestCase):
     perceptron: Perceptron
 
     def setUp(self):
-        self.perceptron = Perceptron([0.0], 1)
+        self.perceptron = Perceptron([0.0], 1, step_activation)
 
     def test_has_bias(self):
         """Test if the Perceptron has the bias attribute."""
@@ -23,20 +23,6 @@ class TestPerceptron(unittest.TestCase):
 
         self.assertTrue(hasattr(self.perceptron, "weights"), msg)
 
-    def test_bias(self):
-        """Test if the bias attribute is equal to -threshold."""
-
-        msg = "Attribute 'bias' does not equal '-threshold'."
-
-        # key = threshold and value = expected bias
-        thresholds = {20: -20, -10: 10}
-
-        for threshold, expected_bias in thresholds.items():
-            perceptron = Perceptron([], threshold)
-            print(str(perceptron))
-
-            self.assertEqual(perceptron.bias, expected_bias, msg)
-
     def test_has___str__(self):
         """Test if the Perceptron has a '__str__()' method."""
 
@@ -51,15 +37,15 @@ class TestPerceptron(unittest.TestCase):
         msg = "The output of Perceptron.activate() is not either 1 or 0"
         perceptron_output: int
 
-        arguments = (  # Each tuple exists of: weights, threshold, input
-            ([1.0, 1.0, 1.0], 3, [1.0, 1.0, 1.0]),
-            ([1.0, 1.0], 3, [1.0, 1.0]),
-            ([1.0, .5], 0.5, [.0, 1.0]),
-            ([1.0, .5], 0.5, [.0, .0]),
+        arguments = (  # Each tuple exists of: weights, bias, input
+            ([1.0, 1.0, 1.0], -3, [1.0, 1.0, 1.0]),
+            ([1.0, 1.0], -3, [1.0, 1.0]),
+            ([1.0, .5], -0.5, [.0, 1.0]),
+            ([1.0, .5],- 0.5, [.0, .0]),
         )
 
         for argument in arguments:
-            self.perceptron = Perceptron(argument[0], argument[1])
+            self.perceptron = Perceptron(argument[0], argument[1], step_activation)
             perceptron_output = self.perceptron.activate(argument[2])
 
             self.assertIn(perceptron_output, (0, 1,), msg)
@@ -70,15 +56,15 @@ class TestPerceptron(unittest.TestCase):
         msg = "Perceptron.activate() does not return correct value"
         perceptron_output: int
 
-        arguments = (  # Each tuple exists of: weights, threshold, input, expected output
-            ([1.0, 1.0, 1.0], 3, [1.0, 1.0, 1.0], 1),
-            ([1.0, 1.0], 3, [1.0, 1.0], 0),
-            ([1.0, .5], 0.5, [.0, 1.0], 1),
-            ([1.0, .5], 0.5, [.0, .0], 0),
+        arguments = (  # Each tuple exists of: weights, bias, input, expected output
+            ([1.0, 1.0, 1.0], -3, [1.0, 1.0, 1.0], 1),
+            ([1.0, 1.0], -3, [1.0, 1.0], 0),
+            ([1.0, .5], -0.5, [.0, 1.0], 1),
+            ([1.0, .5], -0.5, [.0, .0], 0),
         )
 
         for argument in arguments:
-            self.perceptron = Perceptron(argument[0], argument[1])
+            self.perceptron = Perceptron(argument[0], argument[1], step_activation)
             perceptron_output = self.perceptron.activate(argument[2])
 
             self.assertEqual(argument[3], perceptron_output, msg)
@@ -109,7 +95,7 @@ class TestPerceptronLayer(unittest.TestCase):
         msg = "PerceptronLayer.activate() does not return the correct amount of outputs"
 
         for i in range(1, 11):
-            perceptrons = list([Perceptron([0], 0) for j in range(1, i)])
+            perceptrons = list([Perceptron([0], 0, step_activation) for j in range(1, i)])
             perceptron_layer = PerceptronLayer(perceptrons)
 
             self.assertEqual(len(perceptrons), len(perceptron_layer.activate([])), msg)
@@ -119,7 +105,7 @@ class TestPerceptronLayer(unittest.TestCase):
 
         msg = "Perceptron.activate() does not return the correct values"
 
-        perceptrons = [Perceptron([1, 1], 1)]
+        perceptrons = [Perceptron([1, 1], -1, step_activation)]
         perceptron_layer = PerceptronLayer(perceptrons)
 
         self.assertEqual(perceptron_layer.activate([0, 0]), [0], msg)
@@ -127,7 +113,7 @@ class TestPerceptronLayer(unittest.TestCase):
         self.assertEqual(perceptron_layer.activate([1, 0]), [1], msg)
         self.assertEqual(perceptron_layer.activate([1, 1]), [1], msg)
 
-        perceptrons = [Perceptron([1, 1], 1), Perceptron([1, 1], 2)]
+        perceptrons = [Perceptron([1, 1], -1, step_activation), Perceptron([1, 1], -2, step_activation)]
         perceptron_layer = PerceptronLayer(perceptrons)
 
         self.assertEqual(perceptron_layer.activate([0, 0]), [0, 0], msg)
@@ -139,8 +125,15 @@ class TestPerceptronLayer(unittest.TestCase):
 class TestPerceptronNetwork(unittest.TestCase):
     def setUp(self):
         layers = [
-            PerceptronLayer([Perceptron([1, 1], 1), Perceptron([1, 1], 2), Perceptron([-1, -1], 1)]),
-            PerceptronLayer([Perceptron([0.5, 1, .8], -1), Perceptron([.22, 2, .1], 1)]),
+            PerceptronLayer([
+                Perceptron([1, 1], -1, step_activation), 
+                Perceptron([1, 1], -2, step_activation),
+                Perceptron([-1, -1], -1, step_activation)
+            ]),
+            PerceptronLayer([
+                Perceptron([0.5, 1, .8], 1, step_activation), 
+                Perceptron([.22, 2, .1], -1, step_activation)
+            ]),
         ]
         self.perceptron_network = PerceptronNetwork(layers)
 
