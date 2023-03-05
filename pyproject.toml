@@ -6,6 +6,7 @@ authors = [
     {name = "Jimmy Bierenbroodspot", email = "jim12.brood@gmail.com"},
 ]
 requires-python = ">=3.9"
+dependencies = ["ipykernel"]
 
 [tool.setuptools.packages.find]
 exclude = ["ml_22_23.tests*", "ml_22_23.notebooks*"]
