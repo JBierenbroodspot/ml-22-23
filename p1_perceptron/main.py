@@ -65,10 +65,10 @@ class Perceptron:
         self.activation_function = activation_function
 
     def __str__(self) -> str:
-        return (
+        return "".join((
             f"<{self.__class__.__name__} {{",
             f"activation: {str(self.activation_function)}, bias: {self.bias}, weights: {self.weights}}}>"
-        )
+        ))
 
     def __repr__(self) -> str:
         return self.__str__()
