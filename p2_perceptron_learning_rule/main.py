@@ -53,7 +53,7 @@ class Perceptron(p1_perceptron.Perceptron):
         return self
 
     def train(self, training_set: List[List[float]], expected_values: List[float],
-              max_iterations: int = 500, loss_limit: float = 0) -> Perceptron:
+              max_iterations: int = 500, loss_limit: float = 0.1) -> Perceptron:
         """Applies the learning rule until either the maximum amount of iterations has been reached or the loss() method
         has reached a lower bound.
 
@@ -66,6 +66,7 @@ class Perceptron(p1_perceptron.Perceptron):
         Returns:
             self
         """
+        verbose_output: str
         iteration: int = 0
 
         while iteration < max_iterations and self.loss(training_set, expected_values) > loss_limit:
@@ -86,7 +87,7 @@ class Perceptron(p1_perceptron.Perceptron):
         """
         def error_squared(inputs: List[float], target: float) -> float:
             """Calculates the square of the error given some inputs and a target.
-            Should be a lambda function but my linter flake8 complains about.
+            Should be a lambda function but my linter flake8 complains about using those.
             """
             return (self.activate(inputs)-target)**2
 
