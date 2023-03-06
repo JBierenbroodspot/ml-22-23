@@ -79,7 +79,7 @@ class TestPerceptronLayer(unittest.TestCase):
 
         msg = "PerceptronLayer does not contain the attribute 'perceptrons'"
 
-        self.assertTrue(hasattr(self.perceptron_layer, "perceptrons"), msg)
+        self.assertTrue(hasattr(self.perceptron_layer, "children"), msg)
 
     def test_has___str__(self):
         """Test if the PerceptronLayer has a '__str__()' method."""
@@ -126,12 +126,12 @@ class TestPerceptronNetwork(unittest.TestCase):
     def setUp(self):
         layers = [
             PerceptronLayer([
-                Perceptron([1, 1], -1, step_activation), 
+                Perceptron([1, 1], -1, step_activation),
                 Perceptron([1, 1], -2, step_activation),
                 Perceptron([-1, -1], -1, step_activation)
             ]),
             PerceptronLayer([
-                Perceptron([0.5, 1, .8], 1, step_activation), 
+                Perceptron([0.5, 1, .8], 1, step_activation),
                 Perceptron([.22, 2, .1], -1, step_activation)
             ]),
         ]
