@@ -10,7 +10,7 @@ dependencies = ["ipykernel", "matplotlib", "scikit-learn"]
 
 [tool.setuptools.packages.find]
 exclude = ["ml_22_23.tests*", "ml_22_23.notebooks*"]
-include = ["p1_perceptron", "p2_perceptron_learning_rule"]
+include = ["p1_perceptron", "p2_perceptron_learning_rule", "p3_sigmoid_neuron"]
 
 [build-system]
 requires = ["setuptools"]

@@ -33,7 +33,7 @@ def is_activation_function(name: str) -> ActivationFunction:
 
 @is_activation_function(name="step")
 def step_activation(inputs: List[float], weights: List[float], bias: float) -> float:
-    """Step activation for a perceptron.
+    """Step activation function.
 
     Calculates the weighted sum and gives either 1 or 0 as activation value.
 
@@ -66,14 +66,18 @@ class Perceptron:
 
     def __str__(self) -> str:
         return (
-            f"<Perceptron {{activation: {str(self.activation_function)}, bias: {self.bias}, weights: {self.weights}}}>"
+            f"<{self.__class__.__name__} {{",
+            f"activation: {str(self.activation_function)}, bias: {self.bias}, weights: {self.weights}}}>"
         )
 
+    def __repr__(self) -> str:
+        return self.__str__()
+
     def activate(self, inputs: List[float]) -> float:
-        """Calculates activation for the Perceptron using the given inputs.
+        """Calculates activation using the given inputs.
 
         Args:
-            inputs: Inputs for the perceptron, amount of inputs should not exceed len(self.weights).
+            inputs: Input numbers, amount of inputs should not exceed len(self.weights).
 
         Returns:
             The activation value.
@@ -82,31 +86,34 @@ class Perceptron:
 
 
 class PerceptronLayer:
-    perceptrons: List[Perceptron]
+    children: List[Perceptron]
 
     def __init__(self, perceptrons: List[Perceptron]):
-        self.perceptrons = perceptrons
+        self.children = perceptrons
 
     def __str__(self) -> str:
-        out_str: str = "<PerceptronLayer {\n"
+        out_str: str = f"<{self.__class__.__name__} {{\n"
 
-        for index, perceptron in enumerate(self.perceptrons):
-            out_str += f"\t{index}: {str(perceptron)},\n"
+        for index, child in enumerate(self.children):
+            out_str += f"\t{index}: {str(child)},\n"
 
         out_str += "}>"
 
         return out_str
 
+    def __repr__(self) -> str:
+        return self.__str__()
+
     def activate(self, input_values: List[float]) -> List[float]:
-        """Activate every perceptron within the layer using the input_values.
+        """Activate every child within the layer using the input_values.
 
         Args:
-            input_values: Float values used to calculate activation of the perceptrons.
+            input_values: Float values used to calculate activation of the children.
 
         Returns:
-            The output for every perceptron within the layer.
+            The output for every child within the layer.
         """
-        return [perceptron.activate(input_values) for perceptron in self.perceptrons]
+        return [child.activate(input_values) for child in self.children]
 
 
 class PerceptronNetwork:
@@ -116,7 +123,7 @@ class PerceptronNetwork:
         self.layers = layers
 
     def __str__(self) -> str:
-        out_str: str = "<PerceptronNetwork {\n"
+        out_str: str = f"<{self.__class__.__name__} {{\n"
 
         for layer in self.layers:
             out_str += f"{str(layer)},\n"
@@ -125,8 +132,11 @@ class PerceptronNetwork:
 
         return out_str
 
+    def __repr__(self) -> str:
+        return self.__str__()
+
     def predict(self, input_values: List[float]) -> List[float]:
-        """Calculates the output of of multiple layers of Perceptrons.
+        """Calculates the output of of multiple layers of activation elements.
 
         The input_values are fed into the first layer and the result is then fed into the next layer until the last
         layer, of which the output values get returned as the prediction.
