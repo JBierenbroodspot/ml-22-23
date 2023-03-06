@@ -1,3 +1,10 @@
+"""Contains an extension to p1_perceptron.Perceptron. This is done in such a way that the following should NOT be done:
+
+from p1_perceptron import Perceptron
+from p2_perceptron_learning_rule import Perceptron
+
+Although this should also never be desired to do as p2 makes p1 obsolete.
+"""
 from __future__ import annotations
 
 from typing import List
