@@ -17,7 +17,7 @@ def sigmoid_activation(inputs: List[float], weights: List[float], bias: float) -
         bias: Gets added to the weighted sum.
 
     Returns:
-        A value somewhere between 0 and 1. The more negative a number is the closer it gets to 0 and the larger the 
+        A value somewhere between 0 and 1. The more negative a number is the closer it gets to 0 and the larger the
         number is the closer it gets to 1.
     """
     weighted_sum: float = sum(map(operator.mul, inputs, weights)) + bias
