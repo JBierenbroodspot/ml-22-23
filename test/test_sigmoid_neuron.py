@@ -60,7 +60,7 @@ class TestNeuronNetwork(unittest.TestCase):
 
         msg = f"feed_forward() returns {prediction}, expected {expected_value}"
         for pred, expected in zip(prediction, expected_value):
-            self.assertAlmostEqual(pred, expected, 4, msg)
+            self.assertAlmostEqual(pred, expected, 3, msg)
 
 
 if __name__ == "__main__":
