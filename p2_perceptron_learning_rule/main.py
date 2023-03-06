@@ -37,6 +37,43 @@ class Perceptron(p1_perceptron.Perceptron):
                         for weight, input_value in zip(self.weights, input_values)]
         return self
 
+    def update_multiple(self, input_matrix: List[List[float]], expected_values: List[float]) -> Perceptron:
+        """Applies the learning rule to a list of inputs.
+
+        Args:
+            input_matrix: A list containing inputs for the perceptron.
+            expected_values: A list containing the expected values for each input array.
+
+        Returns:
+            self.
+        """
+        for sample, expected_value in zip(input_matrix, expected_values):
+            self.update(sample, expected_value)
+
+        return self
+
+    def train(self, training_set: List[List[float]], expected_values: List[float],
+              max_iterations: int = 500, loss_limit: float = 0) -> Perceptron:
+        """Applies the learning rule until either the maximum amount of iterations has been reached or the loss() method
+        has reached a lower bound.
+
+        Args:
+            training_set: Training data.
+            expected_values: True values for training data.
+            max_iterations: Maximum amount of training iterations. Defaults to 500.
+            loss_limit: The lower MSE limit to stop improving the perceptron when reached. Defaults to 0.
+
+        Returns:
+            self
+        """
+        iteration: int = 0
+
+        while iteration < max_iterations and self.loss(training_set, expected_values) > loss_limit:
+            self.update_multiple(training_set, expected_values)
+            iteration += 1
+
+        return self
+
     def loss(self, input_matrix: List[List[float]], expected_values: List[float]) -> float:
         """Calculates the MSE using a list of inputs.
 
