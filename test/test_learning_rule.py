@@ -31,7 +31,7 @@ class TestLearningRule(unittest.TestCase):
         self.assertAlmostEquals(expected_bias, self.perceptron.bias, 4, msg)
 
         msg = f"Weights after update {self.perceptron.weights} does not equal expected values {expected_weights}"
-        result: bool = all(math.isclose(self.perceptron.weights[i], expected_weights[i], rel_tol=1e-4) 
+        result: bool = all(math.isclose(self.perceptron.weights[i], expected_weights[i], rel_tol=1e-4)
                            for i in range(len(input_values)))
         self.assertTrue(result, msg)
 
