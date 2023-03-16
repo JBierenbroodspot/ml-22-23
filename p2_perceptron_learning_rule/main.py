@@ -66,7 +66,6 @@ class Perceptron(p1_perceptron.Perceptron):
         Returns:
             self
         """
-        verbose_output: str
         iteration: int = 0
 
         while iteration < max_iterations and self.loss(training_set, expected_values) > loss_limit:
