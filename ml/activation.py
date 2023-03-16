@@ -7,7 +7,7 @@ from typing import Callable
 from functools import partial
 
 import numpy as np
-from numpy.typing import NDArray
+from numpy.typing import ArrayLike
 
 
 class ActivationFunction(partial):
@@ -30,7 +30,7 @@ def is_activation_function(name: str) -> ActivationFunction:
     Args:
         name: Name of the activation function. Will be displayed by calling `str()` on said function.
     """
-    def inner(func: Callable[[NDArray[float], NDArray[float], float], float]) -> ActivationFunction:
+    def inner(func: Callable[[ArrayLike[float], ArrayLike[float], float], float]) -> ActivationFunction:
         activation_function = ActivationFunction(func)
         activation_function.name = name
 
@@ -39,7 +39,7 @@ def is_activation_function(name: str) -> ActivationFunction:
 
 
 @is_activation_function(name="step")
-def step_activation(inputs: NDArray[float], weights: NDArray[float], bias: float) -> float:
+def step_activation(inputs: ArrayLike[float], weights: ArrayLike[float], bias: float) -> float:
     """Step activation function.
 
     Calculates the weighted sum and gives either 1 or 0 as activation value.
@@ -61,7 +61,7 @@ def step_activation(inputs: NDArray[float], weights: NDArray[float], bias: float
 
 
 @is_activation_function("sigmoid")
-def sigmoid_activation(inputs: NDArray[float], weights: NDArray[float], bias: float) -> float:
+def sigmoid_activation(inputs: ArrayLike[float], weights: ArrayLike[float], bias: float) -> float:
     """Calculates activation by applying the sigmoid function to a weighted sum.
 
     Args:
