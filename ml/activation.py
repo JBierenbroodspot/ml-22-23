@@ -1,10 +1,13 @@
 """This module contains activation functions. The code is duplicate and solely exists because the packages prefixed with
 `p*_` have become a bit of a mess and segmented due to the way they have been created.
+
+It also uses numpy rather than Python lists.
 """
-from typing import List, Callable
+from typing import Callable
 from functools import partial
-import math
-import operator
+
+import numpy as np
+from numpy.typing import NDArray
 
 
 class ActivationFunction(partial):
@@ -27,7 +30,7 @@ def is_activation_function(name: str) -> ActivationFunction:
     Args:
         name: Name of the activation function. Will be displayed by calling `str()` on said function.
     """
-    def inner(func: Callable[[List[float], List[float], float], float]) -> ActivationFunction:
+    def inner(func: Callable[[NDArray[float], NDArray[float], float], float]) -> ActivationFunction:
         activation_function = ActivationFunction(func)
         activation_function.name = name
 
@@ -36,7 +39,7 @@ def is_activation_function(name: str) -> ActivationFunction:
 
 
 @is_activation_function(name="step")
-def step_activation(inputs: List[float], weights: List[float], bias: float) -> float:
+def step_activation(inputs: NDArray[float], weights: NDArray[float], bias: float) -> float:
     """Step activation function.
 
     Calculates the weighted sum and gives either 1 or 0 as activation value.
@@ -49,8 +52,7 @@ def step_activation(inputs: List[float], weights: List[float], bias: float) -> f
     Returns:
         1 if the weighted sum is larger than or equal to 0, 0 if not.
     """
-    output: int = sum([input_value * weights[index] for index, input_value in enumerate(inputs)])
-    output += bias
+    output: float = np.dot(inputs, weights) + bias
 
     # The float conversion is redundant as python converts integers to float implicitly but as the Zen of Python says:
     # "Explicit is better than implicit". It is also done to keep function signatures consistent over multiple
@@ -59,7 +61,7 @@ def step_activation(inputs: List[float], weights: List[float], bias: float) -> f
 
 
 @is_activation_function("sigmoid")
-def sigmoid_activation(inputs: List[float], weights: List[float], bias: float) -> float:
+def sigmoid_activation(inputs: NDArray[float], weights: NDArray[float], bias: float) -> float:
     """Calculates activation by applying the sigmoid function to a weighted sum.
 
     Args:
@@ -71,5 +73,5 @@ def sigmoid_activation(inputs: List[float], weights: List[float], bias: float) -
         A value somewhere between 0 and 1. The more negative a number is the closer it gets to 0 and the larger the
         number is the closer it gets to 1.
     """
-    weighted_sum: float = sum(map(operator.mul, inputs, weights)) + bias
-    return 1 / (1 + (math.e ** (-weighted_sum)))
+    weighted_sum: float = np.dot(inputs, weights) + bias
+    return 1 / (1 + (np.e ** (-weighted_sum)))
