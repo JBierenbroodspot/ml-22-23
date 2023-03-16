@@ -1,16 +1,16 @@
 [project]
 name = "ml_22_23"
-version = "1.2.0"
+version = "1.4.0"
 description = "Exercises for the subject Machine learning of the year 2022-2023"
 authors = [
     {name = "Jimmy Bierenbroodspot", email = "jim12.brood@gmail.com"},
 ]
 requires-python = ">=3.9"
-dependencies = ["ipykernel", "matplotlib", "scikit-learn"]
+dependencies = ["ipykernel", "matplotlib", "scikit-learn", "numpy"]
 
 [tool.setuptools.packages.find]
 exclude = ["ml_22_23.tests*", "ml_22_23.notebooks*"]
-include = ["p1_perceptron", "p2_perceptron_learning_rule", "p3_sigmoid_neuron"]
+include = ["p1_perceptron", "p2_perceptron_learning_rule", "p3_sigmoid_neuron", "p4_backpropagation"]
 
 [build-system]
 requires = ["setuptools"]
