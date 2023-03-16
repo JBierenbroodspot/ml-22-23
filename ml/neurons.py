@@ -36,15 +36,6 @@ class Neuron:
     def __repr__(self) -> str:
         return self.__str__()
 
-
-class Perceptron(Neuron):
-    """A special kind of Neuron which uses the step activation function."""
-
-    def __init__(self, weights: ArrayLike[float], bias: float):
-        self.bias = bias
-        self.weights = np.array(weights)
-        self.activation_function = step_activation
-
     def activate(self, inputs: ArrayLike[float]) -> float:
         """Calculates activation using the given inputs.
 
@@ -55,6 +46,33 @@ class Perceptron(Neuron):
             The activation value.
         """
         return self.activation_function(inputs, self.weights, self.bias)
+
+    def loss(self, input_matrix: ArrayLike[ArrayLike[float]], expected_values: ArrayLike[float]) -> float:
+        """Calculates the MSE using a list of inputs.
+
+        Args:
+            input_matrix: A list containing values to use as input for the perceptron.
+            expected_values: The values which are expected for each input list.
+
+        Returns:
+            The mean squared error.
+        """
+        def error_squared(inputs: ArrayLike[float], target: float) -> float:
+            """Calculates the square of the error given some inputs and a target.
+            Should be a lambda function but my linter flake8 complains about using those.
+            """
+            return (self.activate(inputs)-target)**2
+
+        return np.sum(map(error_squared, input_matrix, expected_values)) / len(expected_values)
+
+
+class Perceptron(Neuron):
+    """A special kind of Neuron which uses the step activation function."""
+
+    def __init__(self, weights: ArrayLike[float], bias: float):
+        self.bias = bias
+        self.weights = np.array(weights)
+        self.activation_function = step_activation
 
     def update(self, input_values: ArrayLike[float], expected_value: float) -> Perceptron:
         """Update the weights and bias using the Perceptron learning rule.
@@ -89,24 +107,6 @@ class Perceptron(Neuron):
             self.update(sample, expected_value)
 
         return self
-
-    def loss(self, input_matrix: ArrayLike[ArrayLike[float]], expected_values: ArrayLike[float]) -> float:
-        """Calculates the MSE using a list of inputs.
-
-        Args:
-            input_matrix: A list containing values to use as input for the perceptron.
-            expected_values: The values which are expected for each input list.
-
-        Returns:
-            The mean squared error.
-        """
-        def error_squared(inputs: ArrayLike[float], target: float) -> float:
-            """Calculates the square of the error given some inputs and a target.
-            Should be a lambda function but my linter flake8 complains about using those.
-            """
-            return (self.activate(inputs)-target)**2
-
-        return np.sum(map(error_squared, input_matrix, expected_values)) / len(expected_values)
 
 
 class NeuronLayer:
