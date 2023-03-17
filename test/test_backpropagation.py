@@ -30,6 +30,16 @@ class TestOutputNeuron(unittest.TestCase):
 
         self.assertAlmostEqual(derivative_value, expected_value, 4, msg)
 
+    def test_gradient(self):
+        """Tests whether the gradient value gets set correctly."""
+        expected_values: list[float] = [-0.035581, -0.046501]
+
+        for expected_val, input_val in zip(expected_values, self.output_neuron.inputs):
+            gradient_value: float = self.output_neuron.get_gradient(input_val)
+            msg = f"The gradient with input {input_val}: {gradient_value} does not match expected value {expected_val}"
+
+            self.assertAlmostEqual(gradient_value, expected_val, 4, msg)
+
 
 class TestHiddenNeuron(unittest.TestCase):
     hidden_neuron: HiddenNeuron
