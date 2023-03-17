@@ -9,21 +9,16 @@ class TestOutputNeuron(unittest.TestCase):
     output_neuron: OutputNeuron
 
     def setUp(self):
-        self.output_neuron = OutputNeuron([0], 0, sigmoid_activation, 0)
+        self.output_neuron = OutputNeuron([0.534, 0.799], -0.146, sigmoid_activation, 0.1)
 
     def test_error(self):
         """Test if the error property works correctly."""
-        ...
+        error_value: float = self.output_neuron.get_error(1, [0.391, 0.511])
+        expected_vale: float = -0.091
 
-    def test_has__error(self):
-        """Test if the attribute which the error property will modify exists."""
-        msg = "OutputNeuron does not have the attribute `_error`."
+        msg = f"The output of error: {error_value}, does not match the expected value {expected_vale}"
 
-        self.assertTrue(hasattr(self.out, "_error"), msg)
-
-    def test_sigmoid_derivative(self):
-        """Test the sigmoid derivative method."""
-        ...
+        self.assertAlmostEqual(error_value, expected_vale, 4, msg)
 
     def test_gradient(self):
         """Test the gradient method."""

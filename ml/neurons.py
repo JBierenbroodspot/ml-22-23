@@ -10,7 +10,7 @@ attempt has also been made to try to use numpy arrays as much as possible.
 from __future__ import annotations
 
 import numpy as np
-from numpy.typing import ArrayLike, NDArray
+from numpy.typing import NDArray
 
 from ml.activation import step_activation, ActivationFunction
 
@@ -21,7 +21,7 @@ class Neuron:
     activation_function: ActivationFunction
     eta: float
 
-    def __init__(self, weights: ArrayLike[float], bias: float, activation_function: ActivationFunction, eta: float):
+    def __init__(self, weights: NDArray[float], bias: float, activation_function: ActivationFunction, eta: float):
         self.bias = bias
         self.weights = np.array(weights)
         self.activation_function = activation_function
@@ -36,7 +36,7 @@ class Neuron:
     def __repr__(self) -> str:
         return self.__str__()
 
-    def activate(self, inputs: ArrayLike[float]) -> float:
+    def activate(self, inputs: NDArray[float]) -> float:
         """Calculates activation using the given inputs.
 
         Args:
@@ -47,7 +47,7 @@ class Neuron:
         """
         return self.activation_function(inputs, self.weights, self.bias)
 
-    def loss(self, input_matrix: ArrayLike[ArrayLike[float]], expected_values: ArrayLike[float]) -> float:
+    def loss(self, input_matrix: NDArray[NDArray[float]], expected_values: NDArray[float]) -> float:
         """Calculates the MSE using a list of inputs.
 
         Args:
@@ -57,7 +57,7 @@ class Neuron:
         Returns:
             The mean squared error.
         """
-        def error_squared(inputs: ArrayLike[float], target: float) -> float:
+        def error_squared(inputs: NDArray[float], target: float) -> float:
             """Calculates the square of the error given some inputs and a target.
             Should be a lambda function but my linter flake8 complains about using those.
             """
@@ -69,12 +69,12 @@ class Neuron:
 class Perceptron(Neuron):
     """A special kind of Neuron which uses the step activation function."""
 
-    def __init__(self, weights: ArrayLike[float], bias: float):
+    def __init__(self, weights: NDArray[float], bias: float):
         self.bias = bias
         self.weights = np.array(weights)
         self.activation_function = step_activation
 
-    def update(self, input_values: ArrayLike[float], expected_value: float) -> Perceptron:
+    def update(self, input_values: NDArray[float], expected_value: float) -> Perceptron:
         """Update the weights and bias using the Perceptron learning rule.
 
         Args:
@@ -92,7 +92,7 @@ class Perceptron(Neuron):
         return self
 
     def update_multiple(
-        self, input_matrix: ArrayLike[ArrayLike[float]], expected_values: ArrayLike[float]
+        self, input_matrix: NDArray[NDArray[float]], expected_values: NDArray[float]
     ) -> Perceptron:
         """Applies the learning rule to a list of inputs.
 
@@ -112,7 +112,7 @@ class Perceptron(Neuron):
 class NeuronLayer:
     children: NDArray[Neuron]
 
-    def __init__(self, children: ArrayLike[Neuron]):
+    def __init__(self, children: NDArray[Neuron]):
         self.children = np.array(children)
 
     def __str__(self) -> str:
@@ -128,7 +128,7 @@ class NeuronLayer:
     def __repr__(self) -> str:
         return self.__str__()
 
-    def activate(self, input_values: ArrayLike[float]) -> NDArray[float]:
+    def activate(self, input_values: NDArray[float]) -> NDArray[float]:
         """Activate every child within the layer using the input_values.
 
         Args:
@@ -143,7 +143,7 @@ class NeuronLayer:
 class NeuronNetwork:
     layers: NDArray[NeuronLayer]
 
-    def __init__(self, layers: ArrayLike[NeuronLayer]):
+    def __init__(self, layers: NDArray[NeuronLayer]):
         self.layers = np.array(layers)
 
     def __str__(self) -> str:
@@ -159,7 +159,7 @@ class NeuronNetwork:
     def __repr__(self) -> str:
         return self.__str__()
 
-    def feed_forward(self, input_values: ArrayLike[float]) -> NDArray[float]:
+    def feed_forward(self, input_values: NDArray[float]) -> NDArray[float]:
         """Calculates the output of of multiple layers of neurons.
 
         The input_values are fed into the first layer and the result is then fed into the next layer until the last
@@ -171,7 +171,7 @@ class NeuronNetwork:
         Returns:
             The output of the last layer after it has been fed by the layer before that.
         """
-        output_values: ArrayLike[float] = input_values
+        output_values: NDArray[float] = input_values
 
         for layer in self.layers:
             output_values = layer.activate(output_values)

@@ -75,3 +75,15 @@ def sigmoid_activation(inputs: NDArray[float], weights: NDArray[float], bias: fl
     """
     weighted_sum: float = np.dot(inputs, weights) + bias
     return 1 / (1 + (np.e ** (-weighted_sum)))
+
+
+def sigmoid_derivative(output: float) -> float:
+    """Gets the derivative of the sigmoid activation function.
+
+    Args:
+        output: The output value to calculate the derivative with.
+
+    Returns:
+        The derivate.
+    """
+    return output * (1 - output)
