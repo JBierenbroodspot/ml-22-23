@@ -49,6 +49,19 @@ class TestOutputNeuron(unittest.TestCase):
 
             self.assertAlmostEqual(delta, expected_val, 4, msg)
 
+    def test_update(self):
+        """Test if the neurons get updated correctly."""
+        expected_values: list[float] = [-0.055, 0.5695614834589499, 0.8454754937276813]
+        self.output_neuron.update()
+
+        msg = f"The updated bias: {self.output_neuron.bias} does not match expected bias {expected_values[0]}"
+        self.assertAlmostEqual(self.output_neuron.bias, expected_values[0], 4, msg)
+
+        for expected_val, weight in zip(expected_values[1:], self.output_neuron.weights):
+            msg = f"The updated weight: {weight} does not match the expected weight {expected_val}"
+
+            self.assertAlmostEqual(weight, expected_val, 4, msg)
+
 
 class TestHiddenNeuron(unittest.TestCase):
     hidden_neuron: HiddenNeuron

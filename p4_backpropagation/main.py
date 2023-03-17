@@ -201,7 +201,7 @@ class OutputNeuron(Neuron):
         self.bias -= self.deltas[0]
         self.weights -= self.deltas[1:]
 
-        # Delete the new weights to prevent update from using outdated weights the next time the method is used.
+        # Delete the deltas to prevent update from using outdated deltas the next time the method is used.
         del self.deltas
 
         return self
