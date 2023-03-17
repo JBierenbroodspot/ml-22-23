@@ -69,7 +69,7 @@ class OutputNeuron(Neuron):
         """Calculates the error of this Neuron.
 
         Can be unsafe as the Neuron does not care if the values contained within are up-to-date. Prefer using the
-        short-hand method `activate_and_set_deltas()` to make sure all attributes are recent.
+        short-hand method `activate_and_set_all_deltas()` to make sure all attributes are recent.
 
         Args:
             target: The desired output value of this Neuron.
@@ -95,7 +95,7 @@ class OutputNeuron(Neuron):
         """Calculates the gradient given the output of a Neuron in the previous layer.
 
         Can be unsafe as the Neuron does not care if the values contained within are up-to-date. Prefer using the
-        short-hand method `activate_and_set_deltas()` to make sure all attributes are recent.
+        short-hand method `activate_and_set_all_deltas()` to make sure all attributes are recent.
 
         Args:
             prev_neuron_output: The output of a Neuron in the previous layer.
@@ -119,7 +119,7 @@ class OutputNeuron(Neuron):
         learning rate (eta) or the error and the learning rate in case of the weight being the bias.
 
         Can be unsafe as the Neuron does not care if the values contained within are up-to-date. Prefer using the
-        short-hand method `activate_and_set_deltas()` to make sure all attributes are recent.
+        short-hand method `activate_and_set_all_deltas()` to make sure all attributes are recent.
 
         Args:
             is_bias: Whether this weight is the bias or not. Defaults to False.
@@ -134,7 +134,7 @@ class OutputNeuron(Neuron):
         if not hasattr(self, "error"):
             raise AttributeError(" ".join(
                 "This Neuron does not have an `error` attribute yet. Try chaining the",
-                "`set_error()` method like this: `neuron.activate().set_error().get_new_weight()`."
+                "`set_error()` method like this: `neuron.activate().set_error().get_delta()`."
             ))
 
         if is_bias:
@@ -156,7 +156,7 @@ class OutputNeuron(Neuron):
         | Neuron 3 __ deltas[3] ______/   |
 
         Can be unsafe as the Neuron does not care if the values contained within are up-to-date. Prefer using the
-        short-hand method `activate_and_set_deltas()` to make sure all attributes are recent.
+        short-hand method `activate_and_set_all_deltas()` to make sure all attributes are recent.
 
         Raises:
             AttributeError: If the `error` attribute has not been set yet.
@@ -172,11 +172,11 @@ class OutputNeuron(Neuron):
 
         # Reserve some memory so we don't need to reallocate memory every time a new weight is set.
         self.deltas = np.zeros(len(self.weights) + 1)
-        self.deltas[0] = self.get_new_weight(is_bias=True)
+        self.deltas[0] = self.get_delta(is_bias=True)
 
         for index, weight in enumerate(self.weights, start=1):
             gradient = self.get_gradient(self.inputs[index - 1])
-            self.deltas[index] = self.get_new_weight(gradient=gradient)
+            self.deltas[index] = self.get_delta(gradient=gradient)
 
         return self
 
@@ -184,7 +184,7 @@ class OutputNeuron(Neuron):
         """Applies the new weights stored in `deltas` and then deletes the attribute.
 
         Can be unsafe as the Neuron does not care if the values contained within are up-to-date. Prefer using the
-        short-hand method `activate_and_set_deltas()` to make sure all attributes are recent.
+        short-hand method `activate_and_set_all_deltas()` to make sure all attributes are recent.
 
         Raises:
             AttributeError: If `deltas` has not been set.
@@ -195,7 +195,7 @@ class OutputNeuron(Neuron):
         if not hasattr(self, "deltas"):
             raise AttributeError(" ".join(
                     "This Neuron does not have an `deltas` attribute yet. Try chaining the",
-                    "`set_error()` method like this: `neuron.activate().set_error().set_deltas().update()`."
+                    "`set_error()` method like this: `neuron.activate().set_error().set_all_deltas().update()`."
                 ))
 
         self.bias -= self.deltas[0]
@@ -206,16 +206,16 @@ class OutputNeuron(Neuron):
 
         return self
 
-    def activate_and_set_deltas(self, inputs: NDArray[float], target: float) -> OutputNeuron:
+    def activate_and_set_all_deltas(self, inputs: NDArray[float], target: float) -> OutputNeuron:
         """A short-hand method for:
-        `self.activate(inputs).set_error(target).set_deltas(prev_neuron_outputs)`
+        `self.activate(inputs).set_error(target).set_all_deltas(prev_neuron_outputs)`
 
         Because the class does not keep track of what attribute belongs to what value. Because of that it is possible
         to calculate the gradient with an `error` that does not belong to the current output value. Instead this method
         could be called like this:
 
         `hidden_neuron = HiddenNeuron(...)                # Initialize the Neuron`
-        `hidden_neuron.activate_and_set_deltas(...)  # Set the error, gradient and deltas`
+        `hidden_neuron.activate_and_set_all_deltas(...)  # Set the error, gradient and deltas`
 
         `# Now you can retrieve the calculated values`
         `hidden_neuron.error`
@@ -232,7 +232,7 @@ class OutputNeuron(Neuron):
         Returns:
             Self with the `error` and `deltas` attributes set.
         """
-        self.activate(inputs).set_error(target).set_deltas()
+        self.activate(inputs).set_error(target).set_all_deltas()
 
         return self
 
