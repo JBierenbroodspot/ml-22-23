@@ -21,6 +21,15 @@ class TestOutputNeuron(unittest.TestCase):
 
         self.assertAlmostEqual(error_value, expected_vale, 4, msg)
 
+    def test_sigmoid_derivative(self):
+        """Tests whether the sigmoid derivative works."""
+        derivative_value: float = self.output_neuron.activation_derivative(0.616)
+        expected_value: float = 0.2365
+
+        msg = f"The output of sigmoid derivative: {derivative_value} does not match the expected value {expected_value}"
+
+        self.assertAlmostEqual(derivative_value, expected_value, 4, msg)
+
 
 class TestHiddenNeuron(unittest.TestCase):
     hidden_neuron: HiddenNeuron
