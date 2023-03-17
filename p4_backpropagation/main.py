@@ -5,12 +5,12 @@ from typing import Callable
 import numpy as np
 from numpy.typing import NDArray
 
-from ml.neurons import Neuron, NeuronNetwork
+import ml.neurons as mln
 import ml.activation
 from ml.activation import ActivationFunction
 
 
-class OutputNeuron(Neuron):
+class Neuron(mln.Neuron):
     error: float
     activation_derivative: Callable[float, float]
     activation_output: float
@@ -64,32 +64,6 @@ class OutputNeuron(Neuron):
             raise AttributeError(f"The derivative of {str(self.activation_function)} cannot be found in ml.activation")
 
         return getattr(ml.activation, derivative_name)
-
-    def set_error(self, target: float) -> OutputNeuron:
-        """Calculates the error of this Neuron.
-
-        Can be unsafe as the Neuron does not care if the values contained within are up-to-date. Prefer using the
-        short-hand method `activate_and_set_all_deltas()` to make sure all attributes are recent.
-
-        Args:
-            target: The desired output value of this Neuron.
-
-        Raises:
-            AttributeError: If this Neuron has not been activated yet.
-
-        Returns:
-            Self with the `error` attribute set.
-        """
-        if not hasattr(self, "activation_output"):
-            raise AttributeError(" ".join(
-                "This Neuron has not been activated yet and does have an activation value. Try chaining the",
-                "`activate()` method like this: `neuron.activate().set_error()`."
-            ))
-
-        error_value: float = self.activation_derivative(self.activation_output) * -(target - self.activation_output)
-
-        self.error = error_value
-        return self
 
     def get_gradient(self, prev_neuron_output: float) -> float:
         """Calculates the gradient given the output of a Neuron in the previous layer.
@@ -237,9 +211,37 @@ class OutputNeuron(Neuron):
         return self
 
 
+class OutputNeuron(Neuron):
+    def set_error(self, target: float) -> OutputNeuron:
+        """Calculates the error of an output Neuron.
+
+        Can be unsafe as the Neuron does not care if the values contained within are up-to-date. Prefer using the
+        short-hand method `activate_and_set_all_deltas()` to make sure all attributes are recent.
+
+        Args:
+            target: The desired output value of this Neuron.
+
+        Raises:
+            AttributeError: If this Neuron has not been activated yet.
+
+        Returns:
+            Self with the `error` attribute set.
+        """
+        if not hasattr(self, "activation_output"):
+            raise AttributeError(" ".join(
+                "This Neuron has not been activated yet and does have an activation value. Try chaining the",
+                "`activate()` method like this: `neuron.activate().set_error()`."
+            ))
+
+        error_value: float = self.activation_derivative(self.activation_output) * -(target - self.activation_output)
+
+        self.error = error_value
+        return self
+
+
 class HiddenNeuron(Neuron):
     ...
 
 
-class NeuronNetwork(NeuronNetwork):
+class NeuronNetwork(mln.NeuronNetwork):
     ...
