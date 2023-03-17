@@ -15,6 +15,7 @@ class OutputNeuron(Neuron):
     activation_derivative: Callable[float, float]
     activation_output: float
     new_weights: NDArray[float]
+    inputs: NDArray[float]
 
     def __init__(
         self, weights: NDArray[float], bias: float, activation_function: ActivationFunction, eta: float,
@@ -37,6 +38,8 @@ class OutputNeuron(Neuron):
             Self with an updated `activation_output` attribute.
         """
         activation_value: float = super().activate(inputs)
+
+        self.inputs = np.array(inputs)
         self.activation_output = activation_value
 
         return self
@@ -139,7 +142,7 @@ class OutputNeuron(Neuron):
 
         return self.eta * gradient
 
-    def set_new_weights(self, prev_neuron_outputs: NDArray[float]) -> OutputNeuron:
+    def set_new_weights(self) -> OutputNeuron:
         """Stores what each new weight should be in the `new_weights` attribute, with `new_weights[0]` being the new
         bias. The rest is stored in order of each weight with the top weight being `new_weights[1]` and the bottom
         weight being `new_weights[len(new_weights) - 1]`.
@@ -155,9 +158,6 @@ class OutputNeuron(Neuron):
         Can be unsafe as the Neuron does not care if the values contained within are up-to-date. Prefer using the
         short-hand method `activate_and_set_new_weights()` to make sure all attributes are recent.
 
-        Args:
-            prev_neuron_outputs: Outputs of all Neurons in the previous layer.
-
         Raises:
             AttributeError: If the `error` attribute has not been set yet.
 
@@ -171,11 +171,11 @@ class OutputNeuron(Neuron):
                 ))
 
         # Reserve some memory so we don't need to reallocate memory every time a new weight is set.
-        self.new_weights = np.zeros(len(self.weights))
+        self.new_weights = np.zeros(len(self.weights) + 1)
         self.new_weights[0] = np.array([self.get_new_weight(is_bias=True)])
 
         for index, weight in enumerate(self.weights, start=1):
-            gradient = self.get_gradient(prev_neuron_outputs[index])
+            gradient = self.get_gradient(self.inputs[index - 1])
             self.new_weights[index] = self.get_new_weight(gradient=gradient)
 
         return self
@@ -206,9 +206,7 @@ class OutputNeuron(Neuron):
 
         return self
 
-    def activate_and_set_new_weights(
-        self, inputs: NDArray[float], target: float, prev_neuron_outputs: NDArray[float]
-    ) -> OutputNeuron:
+    def activate_and_set_new_weights(self, inputs: NDArray[float], target: float) -> OutputNeuron:
         """A short-hand method for:
         `self.activate(inputs).set_error(target).set_new_weights(prev_neuron_outputs)`
 
@@ -230,12 +228,11 @@ class OutputNeuron(Neuron):
         Args:
             inputs: Input values to activate this Neuron with.
             target: The ideal output value given the input values.
-            prev_neuron_outputs: The output values of the Neurons in the previous layer.
 
         Returns:
             Self with the `error` and `new_weights` attributes set.
         """
-        self.activate(inputs).set_error(target).set_new_weights(prev_neuron_outputs)
+        self.activate(inputs).set_error(target).set_new_weights()
 
         return self
 
