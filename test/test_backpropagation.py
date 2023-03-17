@@ -9,8 +9,8 @@ class TestOutputNeuron(unittest.TestCase):
     output_neuron: OutputNeuron
 
     def setUp(self):
-        self.output_neuron = OutputNeuron([0.534, 0.799], -0.146, sigmoid_activation, 0.1)
-        self.output_neuron.activate_and_set_new_weights([0.391, 0.511], 1)
+        self.output_neuron = OutputNeuron([0.534, 0.799], -0.146, sigmoid_activation, 1)
+        self.output_neuron.activate_and_set_all_deltas([0.391, 0.511], 1)
 
     def test_error(self):
         """Test if the error property works correctly."""
@@ -39,6 +39,15 @@ class TestOutputNeuron(unittest.TestCase):
             msg = f"The gradient with input {input_val}: {gradient_value} does not match expected value {expected_val}"
 
             self.assertAlmostEqual(gradient_value, expected_val, 4, msg)
+
+    def test_new_deltas(self):
+        """Tests if new weights gets calculated correctly."""
+        expected_values: list[float] = [-0.091, -0.035581, -0.046501]
+
+        for expected_val, delta in zip(expected_values, self.output_neuron.deltas):
+            msg = f"The new weight {delta} does not match the expected value {expected_val}"
+
+            self.assertAlmostEqual(delta, expected_val, 4, msg)
 
 
 class TestHiddenNeuron(unittest.TestCase):
