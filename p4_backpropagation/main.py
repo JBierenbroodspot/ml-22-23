@@ -28,7 +28,7 @@ class Neuron(mln.Neuron):
         else:
             self.activation_derivative = activation_derivative
 
-    def activate(self, inputs: NDArray[float]) -> OutputNeuron:
+    def activate(self, inputs: NDArray[float]) -> Neuron:
         """Calculates activation using the given inputs and caches that value.
 
         Args:
@@ -116,7 +116,7 @@ class Neuron(mln.Neuron):
 
         return self.eta * gradient
 
-    def set_all_deltas(self) -> OutputNeuron:
+    def set_all_deltas(self) -> Neuron:
         """Stores what each delta should be in the `deltas` attribute, with `deltas[0]` being the delta for the new
         bias. The rest is stored in order of each weight with the `deltas[1]` belonging to the top weight and the bottom
         and `deltas[len(deltas) - 1]` to the bottom weight.
@@ -154,7 +154,7 @@ class Neuron(mln.Neuron):
 
         return self
 
-    def update(self) -> OutputNeuron:
+    def update(self) -> Neuron:
         """Applies the new weights stored in `deltas` and then deletes the attribute.
 
         Can be unsafe as the Neuron does not care if the values contained within are up-to-date. Prefer using the
@@ -180,7 +180,7 @@ class Neuron(mln.Neuron):
 
         return self
 
-    def activate_and_set_all_deltas(self, inputs: NDArray[float], target: float) -> OutputNeuron:
+    def activate_and_set_all_deltas(self, inputs: NDArray[float], target: float) -> Neuron:
         """A short-hand method for:
         `self.activate(inputs).set_error(target).set_all_deltas(prev_neuron_outputs)`
 
@@ -240,7 +240,8 @@ class OutputNeuron(Neuron):
 
 
 class HiddenNeuron(Neuron):
-    ...
+    def set_error(self, target: float) -> HiddenNeuron:
+        return self
 
 
 class NeuronNetwork(mln.NeuronNetwork):
