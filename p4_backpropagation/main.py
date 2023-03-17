@@ -239,8 +239,67 @@ class OutputNeuron(Neuron):
         return self
 
 
+class NeuronLayer(mln.NeuronLayer):
+    def get_weights_by_position(self, position: int) -> NDArray[float]:
+        """Gets the weights of a Neuron in the previous layer based on it's position in the previous layer.
+
+        Args:
+            position: The position of a Neuron in the previous layer.
+
+        Returns:
+            The weights between a Neuron in the previous layer and all Neurons in this layer.
+        """
+        return np.array(list([child.weights[position] for child in self.children]))
+
+    def get_errors(self) -> NDArray[float]:
+        """Gets the errors of all Neurons in this layer.
+
+        Raises:
+            AttributeError: If the Neurons in this layer has not been activated yet.
+
+        Returns:
+            The errors of all Neurons in this layer.
+        """
+        errors: NDArray[float]
+
+        try:
+            errors = np.array(list([child.error for child in self.children]))
+        except AttributeError:
+            raise AttributeError(
+                "This method is mainly used for backpropagation but the layer as not been activated yet."
+            )
+
+        return errors
+
+
 class HiddenNeuron(Neuron):
-    def set_error(self, target: float) -> HiddenNeuron:
+    def set_error(self, position_in_layer: int, next_layer: NeuronLayer) -> HiddenNeuron:
+        """Calculates the output of a hidden Neuron.
+
+        Can be unsafe as the Neuron does not care if the values contained within are up-to-date. Prefer using the
+        short-hand method `activate_and_set_all_deltas()` to make sure all attributes are recent.
+
+        Args:
+            position_in_layer: The position of this Neuron in a layer.
+            next_layer: The layer which the output of this Neuron's layer will feed.
+
+        Raises:
+            AttributeError: If this Neuron has not been activated yet.
+
+        Returns:
+            Self with the `error` attribute set.
+        """
+        if not hasattr(self, "activation_output"):
+            raise AttributeError(" ".join(
+                "This Neuron has not been activated yet and does have an activation value. Try chaining the",
+                "`activate()` method like this: `neuron.activate().set_error()`."
+            ))
+
+        derivative: float = self.activation_derivative(self.activation_output)
+        error_value: float = derivative * np.dot(next_layer.get_errors_by_position(position_in_layer),
+                                                 next_layer.get_errors())
+
+        self.error = error_value
         return self
 
 
